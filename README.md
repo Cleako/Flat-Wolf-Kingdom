@@ -1,4 +1,5 @@
-# Wolf Kingdom (Previously known as DARScape Classic)
+# Wolf Kingdom
+(Previously known as DARScape Classic)
 
 # Building
  1. Download NetBeans IDE
