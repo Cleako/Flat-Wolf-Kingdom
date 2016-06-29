@@ -135,7 +135,7 @@ public class GUI extends JPanel {
 
   public static void writeSettings() {
     try {
-      File f = new File("FireScape.cfg");
+      File f = new File("WK.cfg");
       Properties pr = new Properties();
 
       FileInputStream fis = new FileInputStream(f);
@@ -163,7 +163,7 @@ public class GUI extends JPanel {
 
   public GUI() {
     initComponents();
-    String configFile = "FireScape.cfg";
+    String configFile = "WK.cfg";
     try {
       Config.initConfig(configFile);
     }
@@ -450,7 +450,7 @@ public class GUI extends JPanel {
       return ret;
     }
     catch (Exception e) {
-      Logger.print(e, 1);
+      //Logger.print(e, 1);
     }
     return null;
   }
@@ -471,7 +471,7 @@ public class GUI extends JPanel {
       fos.close();
     }
     catch (Exception e) {
-      Logger.print(e, 1);
+      //Logger.print(e, 1);
     }
   }
 

@@ -124,7 +124,7 @@ public class CommandHandler implements PacketHandler {
         playerscounter++;
       }
       player.getActionSender().sendMessage("@cya@[@red@Wolf Kingdom@cya@] @whi@There are currently @or1@" + playerscounter
-          + " @whi@players playing FireScape.");
+          + " @whi@players playing.");
       return;
     }
     if (cmd.equals("onlinelist")) {

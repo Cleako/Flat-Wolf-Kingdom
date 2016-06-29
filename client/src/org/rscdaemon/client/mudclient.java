@@ -84,8 +84,8 @@ public final class mudclient extends GameWindowMiddleMan {
     mc.appletMode = false;
     mc.setLogo(Toolkit.getDefaultToolkit().getImage(Config.CONF_DIR + File.separator + "Loading.rscd"));
     mc.createWindow(mc.windowWidth, mc.windowHeight + 11, "Wolf Kingdom", false);
-    System.out.println("Wolf Kingdom is now loading...");
-    System.out.println("Please... Wait...");
+    //System.out.println("Wolf Kingdom is now loading...");
+    //System.out.println("Please... Wait...");
   }
 
   public static final void startScript() throws Exception {
@@ -96,8 +96,8 @@ public final class mudclient extends GameWindowMiddleMan {
     mc.appletMode = false;
     mc.setLogo(Toolkit.getDefaultToolkit().getImage(Config.CONF_DIR + File.separator + "Loading.rscd"));
     mc.createWindow(mc.windowWidth, mc.windowHeight + 11, "Wolf Kingdom", false);
-    System.out.println("Wolf Kingdom is now loading...");
-    System.out.println("Please... Wait...");
+    //System.out.println("Wolf Kingdom is now loading...");
+    //System.out.println("Please... Wait...");
   }
 
   public int DistanceTo(int x1, int y1, int x2, int y2) {
@@ -6375,8 +6375,8 @@ public final class mudclient extends GameWindowMiddleMan {
 
   private final boolean sendWalkCommand(int walkSectionX, int walkSectionY, int x1, int y1, int x2, int y2,
       boolean stepBoolean, boolean coordsEqual) {
-    System.out.println("walkSectionX=" + walkSectionX + " walkSectionY=" + walkSectionY + " x1=" + x1 + " y1=" + y1
-        + " x2=" + x2 + " y2=" + y2 + " stepBool=" + stepBoolean + " coordsEqual=" + coordsEqual);
+    //System.out.println("walkSectionX=" + walkSectionX + " walkSectionY=" + walkSectionY + " x1=" + x1 + " y1=" + y1
+    //    + " x2=" + x2 + " y2=" + y2 + " stepBool=" + stepBoolean + " coordsEqual=" + coordsEqual);
     // todo: needs checking
     int stepCount = engineHandle.getStepCount(walkSectionX, walkSectionY, x1, y1, x2, y2, sectionXArray, sectionYArray,
         stepBoolean);

@@ -14,7 +14,7 @@ public class SaveEvent {
       p.save();
     }
     cur = System.currentTimeMillis() - cur;
-    Logger.print(world.getPlayers().count() + " Players saved in " + cur + "ms", 3);
+    //Logger.print(world.getPlayers().count() + " Players saved in " + cur + "ms", 3);
   }
 
 }

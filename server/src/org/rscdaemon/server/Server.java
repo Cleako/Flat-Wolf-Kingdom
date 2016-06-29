@@ -103,7 +103,7 @@ public class Server {
     stopPvp();
     duelingEvent = new SingleEvent(null, 666666666) {
       public void action() {
-        System.out.println("Shouldn't have reached here...Duel arena hackers.");
+        System.out.println("Shouldn't have reached here. Duel arena hackers!");
       }
     };
     world.getDelayedEventHandler().add(duelingEvent);
@@ -183,15 +183,15 @@ public class Server {
           fis.close();
           pr.setProperty("loggedin", "false");
           FileOutputStream fos = new FileOutputStream(f);
-          pr.store(fos, "Character Data.");
+          pr.store(fos, "Character data");
           fos.close();
         }
 
       }
-      Logger.print(count + " Accounts exist.", 3);
+      //Logger.print(count + " Accounts exist", 3);
     }
     catch (Exception e) {
-      Logger.print(e.toString(), 1);
+      //Logger.print(e.toString(), 1);
     }
   }
 
@@ -200,7 +200,7 @@ public class Server {
    * prepares the server socket to accept connections.
    */
   public Server() {
-    String configFile = "FireScape.cfg";
+    String configFile = "WK.cfg";
     try {
       Config.initConfig(configFile);
     }
@@ -209,7 +209,7 @@ public class Server {
     }
     resetVars();
     try {
-      Logger.print("Wolf Kingdom starting up.", 3);
+      //Logger.print("Wolf Kingdom starting up.", 3);
       GameVars.serverRunning = true;
     }
     catch (Exception r) {
@@ -248,7 +248,7 @@ public class Server {
    */
   public void kill() {
     // GUI.resetVars();
-    Logger.print("CleanRSC Shutting Down...", 3);
+    Logger.print("Shutting down...", 3);
     running = false;
     engine.emptyWorld();
   }
@@ -293,29 +293,29 @@ public class Server {
       return ret;
     }
     catch (Exception e) {
-      Logger.print(e, 1);
+      //Logger.print(e, 1);
     }
     return null;
   }
 
   public static void writeValue(String user, String key, String value) {
     String username = user.replaceAll(" ", "_").toLowerCase();
-    String redis_key = "players_" + username.toLowerCase();
+    String redis_key = "player_" + username.toLowerCase();
     try (Jedis jedis = world.redis.getResource()) {
       if (jedis.exists(redis_key)) {
         ByteArrayInputStream ios = new ByteArrayInputStream(jedis.get(redis_key).getBytes(StandardCharsets.UTF_8));
-        Logger.print("Loaded players_" + username.toLowerCase() + " from redis.", 3);
+        //Logger.print(username.toLowerCase() + " logged in.", 3);
         Properties pr = new Properties();
         pr.load(ios);
         ios.close();
         pr.setProperty(key, value);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        pr.store(bos, "Redis backed character data");
+        pr.store(bos, "Player save");
         jedis.set(redis_key, bos.toString());
       }
     }
     catch (Exception e) {
-      Logger.print(e, 1);
+      //Logger.print(e, 1);
     }
   }
 

@@ -343,7 +343,7 @@ public class WallObjectAction implements PacketHandler {
                 if (affectedNpc == null) {
                   affectedNpc = affectedNpc2;
                 }
-                System.out.println(owner.getLocation().getX() + " " + owner.getLocation().getY());
+                //System.out.println(owner.getLocation().getX() + " " + owner.getLocation().getY());
                 if (affectedNpc != null && owner.getLocation().getX() == 374 && owner.getLocation().getY() == 3332) {
                   owner.getActionSender().sendMessage("Suddenly the suit of armour comes to life!");
                   affectedNpc.resetPath();

@@ -207,7 +207,7 @@ public final class World {
       player.destroy(true);
     }
     catch (Exception e) {
-      System.out.println(e);
+      //System.out.println(e);
     }
   }
 

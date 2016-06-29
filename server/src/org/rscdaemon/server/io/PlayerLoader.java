@@ -34,11 +34,11 @@ public class PlayerLoader {
       // user = user.replaceAll("_", " ");
       InputStream ios = null;
       String username = user.replaceAll(" ", "_").toLowerCase();
-      String redis_key = "players_" + username.toLowerCase();
+      String redis_key = "player_" + username.toLowerCase();
       try (Jedis jedis = redis.getResource()) {
         if (jedis.exists(redis_key)) {
           ios = new ByteArrayInputStream(jedis.get(redis_key).getBytes(StandardCharsets.UTF_8));
-          Logger.print("Loaded players_" + username.toLowerCase() + " from redis.", 3);
+          //Logger.print("Loaded player_" + username.toLowerCase() + " from redis.", 3);
           props.load(ios);
           if (Integer.valueOf(props.getProperty("rank")) == 6) {
             ios.close();
@@ -58,14 +58,14 @@ public class PlayerLoader {
           }
         } else {
           Properties pr = new Properties();
-          pr.load(new FileInputStream(new File("players/Template")));
+          //pr.load(new FileInputStream(new File("players/Template")));
           ByteArrayOutputStream bos = new ByteArrayOutputStream();
           pr.setProperty("pass", pass);
-          pr.store(bos, "Redis backed character data");
+          pr.store(bos, "Player save");
           jedis.set(redis_key, bos.toString());
-          Logger.print("Saved " + redis_key + " data to redis.", 3);
+          //Logger.print("Saved " + redis_key + " data to redis.", 3);
           // Server.writeValue(user, "pass", pass);
-          Logger.print("Account Created: " + user, 3);
+          Logger.print("Account created: " + user, 3);
           return 1;
         }
       }

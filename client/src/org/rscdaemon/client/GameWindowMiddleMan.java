@@ -47,7 +47,7 @@ public abstract class GameWindowMiddleMan extends GameWindow {
         loginScreenPrint("Login server offline.", "Please try again in a few mins");
         return;
       }
-      System.out.print("Session ID: " + sessionID);
+      //System.out.print("Session ID: " + sessionID);
       int sessionRotationKeys[] = new int[4];
       sessionRotationKeys[0] = (int) (Math.random() * 99999999D);
       sessionRotationKeys[1] = (int) (Math.random() * 99999999D);

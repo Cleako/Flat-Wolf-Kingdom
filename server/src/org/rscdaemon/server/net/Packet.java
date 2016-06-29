@@ -259,7 +259,8 @@ public class Packet {
   public String toString() {
     String origin = session == null ? "this"
         : ((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress();
-    return "origin = " + origin + " length = " + pLength;
+    //return "origin = " + origin + " length = " + pLength;
+    return "";
   }
 
 }

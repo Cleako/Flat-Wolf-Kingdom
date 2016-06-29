@@ -55,7 +55,7 @@ public class RSCConnectionHandler implements IoHandler {
       return;
     }
     RSCPacket p = (RSCPacket) message;
-    System.out.println("[" + player.getUsername() + "] " + p.toString());
+    //System.out.println("[" + player.getUsername() + "] " + p.toString());
     player.addPacket(p);
     packets.add(p);
   }

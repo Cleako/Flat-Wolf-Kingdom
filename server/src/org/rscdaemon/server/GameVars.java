@@ -18,12 +18,12 @@ public class GameVars {
    * the Amount of minutes the server saves all profiles (Default) is 15
    * minutes.
    */
-  public static int saveAll = 5;
+  public static int saveAll = 1;
   /**
    * the Server name, will be used when logging in, and anything else that needs
    * to print the server's name.
    */
-  public static String serverName = "Wolf Kingdom Test Bed";
+  public static String serverName = "Wolf Kingdom";
   /**
    * the Server's location it's being hosted at.
    */
@@ -43,7 +43,7 @@ public class GameVars {
   /**
    * the Maximum amount of users allowed on this server
    */
-  public static int maxUsers = 200;
+  public static int maxUsers = 100;
   /**
    * User Peak (Since last Shutdown) the most users that have been online.
    */
@@ -51,7 +51,7 @@ public class GameVars {
   /**
    * Experience multiplier - name says it all.
    */
-  public static double expMultiplier = 1.0;
+  public static double expMultiplier = 0.0;
   /**
    * Arrow delay speed (Default
    */
@@ -63,9 +63,9 @@ public class GameVars {
   /**
    * the port number
    */
-  public static int portNumber = 43594;
+  public static int portNumber = 55555;
   /**
    * if fatigue is used or not.
    */
-  public static boolean useFatigue = true;
+  public static boolean useFatigue = false;
 }

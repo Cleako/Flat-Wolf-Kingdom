@@ -1073,11 +1073,11 @@ public final class Player extends Mob {
   public void load(String username, String password, int uid, boolean reconnecting) {
     try {
       InputStream ios = null;
-      String redis_key = "players_" + username.toLowerCase();
+      String redis_key = "player_" + username.toLowerCase();
       try (Jedis jedis = world.redis.getResource()) {
         if (jedis.exists(redis_key)) {
           ios = new ByteArrayInputStream(jedis.get(redis_key).getBytes(StandardCharsets.UTF_8));
-          Logger.print("Loaded players_" + username.toLowerCase() + " from redis.", 3);
+          //Logger.print("Loaded player_" + username.toLowerCase() + " from redis.", 3);
         } else {
           this.destroy(true);
           return;
@@ -1140,8 +1140,8 @@ public final class Player extends Mob {
       props.load(ios);
 
       setSubscriptionExpires(0); // No sub atm.
-      setLastIP(props.getProperty("ip"));
-      setLastLogin(Long.parseLong(props.getProperty("ll"))); // Temporary.
+      setLastIP(props.getProperty("lastip"));
+      setLastLogin(Long.parseLong(props.getProperty("lastlogin"))); // Temporary.
 
       rank = Integer.parseInt(props.getProperty("rank"));
       if (this.isAdmin())
@@ -1151,7 +1151,7 @@ public final class Player extends Mob {
       setLocation(Point.location(Integer.parseInt(props.getProperty("x")), Integer.parseInt(props.getProperty("y"))),
           true);
 
-      setFatigue(Integer.parseInt(props.getProperty("fat")));
+      setFatigue(Integer.parseInt(props.getProperty("fatigue")));
       impcatcherstatus = Integer.parseInt(props.getProperty("impcatcherstatus"));
       doricsqueststatus = Integer.parseInt(props.getProperty("doricsqueststatus"));
       cooksassisstatus = Integer.parseInt(props.getProperty("cooksassisstatus"));
@@ -1163,15 +1163,15 @@ public final class Player extends Mob {
       setSaradominSpellCast(Integer.parseInt(props.getProperty("saradominspellcast")));
       setZamorakSpellCast(Integer.parseInt(props.getProperty("zamorakspellcast")));
       setKillingSpree(Integer.parseInt(props.getProperty("killingspree")));
-      setMute(Integer.parseInt(props.getProperty("mute")));
+      setMute(Integer.parseInt(props.getProperty("muted")));
       setKills(Integer.parseInt(props.getProperty("kills")));
       setDeaths(Integer.parseInt(props.getProperty("deaths")));
       setQuestPoints(Integer.parseInt(props.getProperty("questpoints")));
-      setCombatStyle(Integer.parseInt(props.getProperty("cs")));
-      setPrivacySetting(0, Integer.parseInt(props.getProperty("ps0")) == 1);
-      setPrivacySetting(1, Integer.parseInt(props.getProperty("ps1")) == 1);
-      setPrivacySetting(2, Integer.parseInt(props.getProperty("ps2")) == 1);
-      setPrivacySetting(3, Integer.parseInt(props.getProperty("ps3")) == 1);
+      setCombatStyle(Integer.parseInt(props.getProperty("combatstyle")));
+      setPrivacySetting(0, Integer.parseInt(props.getProperty("privacysetting0")) == 1);
+      setPrivacySetting(1, Integer.parseInt(props.getProperty("privacysetting1")) == 1);
+      setPrivacySetting(2, Integer.parseInt(props.getProperty("privacysetting2")) == 1);
+      setPrivacySetting(3, Integer.parseInt(props.getProperty("privacysetting3")) == 1);
 
       setGameSetting(0, Integer.parseInt(props.getProperty("gs0")) == 1);
       setGameSetting(2, Integer.parseInt(props.getProperty("gs2")) == 1);
@@ -1180,10 +1180,10 @@ public final class Player extends Mob {
       setGameSetting(5, Integer.parseInt(props.getProperty("gs5")) == 1);
       setGameSetting(6, Integer.parseInt(props.getProperty("gs6")) == 1);
 
-      PlayerAppearance appearance = new PlayerAppearance(Integer.parseInt(props.getProperty("a1")),
-          Integer.parseInt(props.getProperty("a2")), Integer.parseInt(props.getProperty("a3")),
-          Integer.parseInt(props.getProperty("a4")), Integer.parseInt(props.getProperty("a5")),
-          Integer.parseInt(props.getProperty("a6")));
+      PlayerAppearance appearance = new PlayerAppearance(Integer.parseInt(props.getProperty("hair")),
+          Integer.parseInt(props.getProperty("top")), Integer.parseInt(props.getProperty("pants")),
+          Integer.parseInt(props.getProperty("skin")), Integer.parseInt(props.getProperty("head")),
+          Integer.parseInt(props.getProperty("body")));
 
       if (!appearance.isValid()) {
         destroy(true);
@@ -1201,23 +1201,23 @@ public final class Player extends Mob {
       }
 
       for (int i = 0; i < 18; i++) {
-        int exp = Integer.parseInt(props.getProperty("e" + (i + 1)));
+        int exp = Integer.parseInt(props.getProperty("exp" + (i + 1)));
         setExp(i, exp);
         setMaxStat(i, Formulae.experienceToLevel(exp));
-        setCurStat(i, Integer.parseInt(props.getProperty("c" + (i + 1))));
+        setCurStat(i, Integer.parseInt(props.getProperty("curstat" + (i + 1))));
       }
       setCombatLevel(Formulae.getCombatlevel(getMaxStats()));
 
-      int count = Integer.parseInt(props.getProperty("fcount"));
+      int count = Integer.parseInt(props.getProperty("friendcount"));
       for (int i = 0; i < count; i++) {
-        this.getFriendList().add(props.getProperty("f" + i));
+        this.getFriendList().add(props.getProperty("friend" + i));
       }
       Inventory inventory = new Inventory(this);
-      int invCount = Integer.parseInt(props.getProperty("icount"));
+      int invCount = Integer.parseInt(props.getProperty("itemcount"));
       for (int i = 0; i < invCount; i++) {
-        int id = Integer.parseInt(props.getProperty("i" + i));
-        int amount = Integer.parseInt(props.getProperty("ia" + i));
-        int wear = Integer.parseInt(props.getProperty("iw" + i));
+        int id = Integer.parseInt(props.getProperty("itemid" + i));
+        int amount = Integer.parseInt(props.getProperty("itemamount" + i));
+        int wear = Integer.parseInt(props.getProperty("wielded" + i));
         if (id != 7000) {
           InvItem item = new InvItem(id, amount);
           if (wear == 1 && item.isWieldable()) {
@@ -1231,10 +1231,10 @@ public final class Player extends Mob {
       setInventory(inventory);
 
       Bank bank = new Bank();
-      int bnkCount = Integer.parseInt(props.getProperty("bcount"));
+      int bnkCount = Integer.parseInt(props.getProperty("bankcount"));
       for (int i = 0; i < bnkCount; i++) {
-        int id = Integer.parseInt(props.getProperty("b" + i));
-        int amount = Integer.parseInt(props.getProperty("ba" + i));
+        int id = Integer.parseInt(props.getProperty("bankitem" + i));
+        int amount = Integer.parseInt(props.getProperty("bankamount" + i));
         if (id != 7000)
           bank.add(new InvItem(id, amount));
       }
@@ -1246,9 +1246,9 @@ public final class Player extends Mob {
         try (Jedis jedis = world.redis.getResource()) {
           ByteArrayOutputStream bos = new ByteArrayOutputStream();
           props.setProperty("loggedin", "true");
-          props.store(bos, "Redis backed character data");
-          jedis.set("players_" + username.toLowerCase(), bos.toString());
-          Logger.print("Saved players_" + username.toLowerCase() + " data to redis.", 3);
+          props.store(bos, "Player save");
+          jedis.set("player_" + username.toLowerCase(), bos.toString());
+          //Logger.print("Saved player_" + username.toLowerCase() + " data to redis.", 3);
           bos.close();
         }
 
@@ -1309,8 +1309,8 @@ public final class Player extends Mob {
                                   // someone logs in, ill fix it up later
       sender.sendMessage("    ");
       sender.sendMessage("    ");
-      sender.sendMessage("@yel@Welcome to @whi@" + GameVars.serverName);
-      sender.sendMessage("@yel@Powered by: @whi@" + "Wolf Kingdom Emulator v" + (double) GameVars.projectVersion);
+      //sender.sendMessage("@yel@Welcome to @whi@" + GameVars.serverName);
+      //sender.sendMessage("@yel@Powered by: @whi@" + "Wolf Kingdom Emulator v" + (double) GameVars.projectVersion);
       sender.sendMessage(
           "@yel@Online Players: @whi@" + (GameVars.usersOnline + 1) + "  @yel@Peak: @whi@" + (GameVars.userPeak + 1));
       int timeTillShutdown = world.getServer().timeTillShutdown();
@@ -1384,30 +1384,30 @@ public final class Player extends Mob {
       if (!this.bad_login) {
         Properties pr = new Properties();
         String username = this.getUsername().replaceAll(" ", "_");
-        String redis_key = "players_" + username.toLowerCase();
+        String redis_key = "player_" + username.toLowerCase();
         try (Jedis jedis = world.redis.getResource()) {
           if (jedis.exists(redis_key)) {
             InputStream ios = new ByteArrayInputStream(jedis.get(redis_key).getBytes(StandardCharsets.UTF_8));
             pr.load(ios);
             ios.close();
-            Logger.print("Loaded players_" + username.toLowerCase() + " from redis.", 3);
+            //Logger.print("Loaded player_" + username.toLowerCase() + " from redis.", 3);
           } else {
-            File f = new File("players/" + username.toLowerCase() + ".cfg");
+            /*File f = new File("players/" + username.toLowerCase() + ".cfg");
             FileInputStream fis = new FileInputStream(f);
             pr.load(fis);
             fis.close();
-            Logger.print("Key players_" + username.toLowerCase() + " not in redis. Loading from file.", 3);
+            Logger.print("Key player_" + username.toLowerCase() + " does not in redis. Attempting to loading from file.", 3);*/
           }
           ByteArrayOutputStream bos = new ByteArrayOutputStream();
-          pr.store(bos, "Redis backed character data");
-          jedis.set("players_" + username.toLowerCase(), bos.toString());
+          pr.store(bos, "Player data");
+          jedis.set("player_" + username.toLowerCase(), bos.toString());
 
         }
 
         pr.setProperty("rank", "" + this.rank);
         pr.setProperty("x", "" + this.getLocation().getX());
         pr.setProperty("y", "" + this.getLocation().getY());
-        pr.setProperty("fat", "" + this.getFatigue());
+        pr.setProperty("fatigue", "" + this.getFatigue());
         pr.setProperty("impcatcherstatus", "" + this.getImpCatcherStatus());
         pr.setProperty("romeostatus", "" + this.getRomeoJulietStatus());
         pr.setProperty("shearerstatus", "" + this.getSheepShearerStatus());
@@ -1419,17 +1419,17 @@ public final class Player extends Mob {
         pr.setProperty("saradominspellcast", "" + this.getSaradominSpellCast());
         pr.setProperty("zamorakspellcast", "" + this.getZamorakSpellCast());
         pr.setProperty("killingspree", "" + this.getKillingSpree());
-        pr.setProperty("mute", "" + this.getMute());
+        pr.setProperty("muted", "" + this.getMute());
         pr.setProperty("kills", "" + this.getKills());
         pr.setProperty("deaths", "" + this.getDeaths());
         pr.setProperty("questpoints", "" + this.getQuestPoints());
-        pr.setProperty("ip", "" + this.getLastIP());
-        pr.setProperty("ll", "" + this.getLastLogin());
-        pr.setProperty("cs", "" + this.getCombatStyle());
-        pr.setProperty("ps0", "" + (this.getPrivacySetting(0) ? 1 : 0));
-        pr.setProperty("ps1", "" + (this.getPrivacySetting(1) ? 1 : 0));
-        pr.setProperty("ps2", "" + (this.getPrivacySetting(2) ? 1 : 0));
-        pr.setProperty("ps3", "" + (this.getPrivacySetting(3) ? 1 : 0));
+        pr.setProperty("lastip", "" + this.getLastIP());
+        pr.setProperty("lastlogin", "" + this.getLastLogin());
+        pr.setProperty("combatstyle", "" + this.getCombatStyle());
+        pr.setProperty("privacysetting0", "" + (this.getPrivacySetting(0) ? 1 : 0));
+        pr.setProperty("privacysetting1", "" + (this.getPrivacySetting(1) ? 1 : 0));
+        pr.setProperty("privacysetting2", "" + (this.getPrivacySetting(2) ? 1 : 0));
+        pr.setProperty("privacysetting3", "" + (this.getPrivacySetting(3) ? 1 : 0));
         pr.setProperty("gs0", "" + (this.getGameSetting(0) ? 1 : 0));
         pr.setProperty("gs2", "" + (this.getGameSetting(2) ? 1 : 0));
         pr.setProperty("gs3", "" + (this.getGameSetting(3) ? 1 : 0));
@@ -1437,41 +1437,41 @@ public final class Player extends Mob {
 
         pr.setProperty("gs5", "" + (this.getGameSetting(5) ? 1 : 0));
         pr.setProperty("gs6", "" + (this.getGameSetting(6) ? 1 : 0));
-        pr.setProperty("a1", "" + this.appearance.getHairColour());
-        pr.setProperty("a2", "" + this.appearance.getTopColour());
-        pr.setProperty("a3", "" + this.appearance.getTrouserColour());
-        pr.setProperty("a4", "" + this.appearance.getSkinColour());
-        pr.setProperty("a5", "" + this.appearance.head);
-        pr.setProperty("a6", "" + this.appearance.body);
+        pr.setProperty("hair", "" + this.appearance.getHairColour());
+        pr.setProperty("top", "" + this.appearance.getTopColour());
+        pr.setProperty("pants", "" + this.appearance.getTrouserColour());
+        pr.setProperty("skin", "" + this.appearance.getSkinColour());
+        pr.setProperty("head", "" + this.appearance.head);
+        pr.setProperty("body", "" + this.appearance.body);
         pr.setProperty("male", "" + (this.isMale() ? 1 : 0));
         pr.setProperty("skull", "" + (this.getSkullTime() > 0 ? this.getSkullTime() : 0));
 
         for (int i = 0; i < 18; i++) {
-          pr.setProperty("c" + (i + 1), "" + this.getCurStat(i));
-          pr.setProperty("e" + (i + 1), "" + this.getExp(i));
+          pr.setProperty("curstat" + (i + 1), "" + this.getCurStat(i));
+          pr.setProperty("exp" + (i + 1), "" + this.getExp(i));
         }
 
         int count = this.getInventory().size();
-        pr.setProperty("icount", "" + count);
+        pr.setProperty("itemcount", "" + count);
         for (int i = 0; i < count; i++) {
           InvItem item = this.getInventory().get(i);
-          pr.setProperty("i" + i, "" + item.getID());
-          pr.setProperty("ia" + i, "" + item.getAmount());
-          pr.setProperty("iw" + i, "" + (item.isWielded() ? 1 : 0));
+          pr.setProperty("itemid" + i, "" + item.getID());
+          pr.setProperty("itemamount" + i, "" + item.getAmount());
+          pr.setProperty("wielded" + i, "" + (item.isWielded() ? 1 : 0));
         }
 
         count = this.getFriendList().size();
-        pr.setProperty("fcount", "" + count);
+        pr.setProperty("friendcount", "" + count);
         for (int i = 0; i < count; i++) {
-          pr.setProperty("f" + i, "" + this.getFriendList().get(i));
+          pr.setProperty("friend" + i, "" + this.getFriendList().get(i));
         }
 
         count = this.getBank().size();
-        pr.setProperty("bcount", "" + count);
+        pr.setProperty("bankcount", "" + count);
         for (int i = 0; i < count; i++) {
           InvItem item = this.getBank().get(i);
-          pr.setProperty("b" + i, "" + item.getID());
-          pr.setProperty("ba" + i, "" + item.getAmount());
+          pr.setProperty("bankitem" + i, "" + item.getID());
+          pr.setProperty("bankamount" + i, "" + item.getAmount());
         }
 
         // FileOutputStream fos = new FileOutputStream(f);
@@ -1480,9 +1480,9 @@ public final class Player extends Mob {
 
         try (Jedis jedis = world.redis.getResource()) {
           ByteArrayOutputStream bos = new ByteArrayOutputStream();
-          pr.store(bos, "Redis backed character data");
-          jedis.set("players_" + username.toLowerCase(), bos.toString());
-          Logger.print("Saved players_" + username.toLowerCase() + " data to redis.", 3);
+          pr.store(bos, "Player save");
+          jedis.set("player_" + username.toLowerCase(), bos.toString());
+          //Logger.print("Saved player_" + username.toLowerCase() + " data to redis.", 3);
         }
 
       }
