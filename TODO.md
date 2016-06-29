@@ -18,9 +18,9 @@ No idea why they're plaintext right now, but this should change.
 Right now, the way to manipulate a persisted character is like this:
 
 ```
-$ redis-cli GET players_player_name > /tmp/player_name.txt
+$ redis-cli GET player_player_name > /tmp/player_name.txt
 $ sed -i 's/loggedin=true/loggedin=false/' /tmp/player_name.txt
-$ redis-cli SET players_player_name "$(cat /tmp/player_name.txt)"
+$ redis-cli SET player_player_name "$(cat /tmp/player_name.txt)"
 ```
 
 This is cumbersome and should have a better way to do this.

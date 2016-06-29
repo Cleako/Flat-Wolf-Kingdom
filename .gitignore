@@ -14,3 +14,9 @@ firescape-server/players/*.cfg
 /client/nbproject/private/
 /client/build/
 /client/dist/
+/Launcher/nbproject/private/
+/RSC Map Generator/nbproject/private/
+/Tools/Sprite Editor/build/
+/Tools/Sprite Editor/dist/
+/Tools/Sprite Editor/nbproject/private/
+/Map Generator/nbproject/private/
