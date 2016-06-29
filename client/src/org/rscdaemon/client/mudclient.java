@@ -568,18 +568,32 @@ public final class mudclient extends GameWindowMiddleMan {
     bGr.dispose();
     return bimage;
   }
+  
+  private int elevationTest1 = 9200;
+  private int elevationTest2 = 8800;
+  private int cameraRotation1 = 0;
+  private int verticalCamera = 940;
+   
+  private void drawLoadingScreen() {
+      cameraRotation1++;
+      gameGraphics.removeAllPixels();
+      gameCamera.setCamera(elevationTest1, -engineHandle.getAveragedElevation(elevationTest1, elevationTest2), elevationTest2, verticalCamera, cameraRotation1, 0, cameraHeight * 4);
+      gameCamera.finishCamera();
+      gameGraphics.drawPicture((windowWidth / 2 - 241), (windowHeight / 2) - 127, SPRITE_MEDIA_START + 10);
+  }
 
   private final void drawLoginScreen() {
     hasReceivedWelcomeBoxDetails = false;
     gameGraphics.f1Toggle = false;
     gameGraphics.method211();
+    //drawLoadingScreen(); // spinning background 
     if (loginScreenNumber == 0)
       menuWelcome.drawMenu();
     if (loginScreenNumber == 1)
       menuNewUser.drawMenu();
     if (loginScreenNumber == 2)
       menuLogin.drawMenu();
-    gameGraphics.drawPicture(0, 0, 3151);
+    gameGraphics.drawPicture(0, 0, 3151); // background picture)
     gameGraphics.drawImage(aGraphics936, 0, 0);
   }
 
@@ -1417,7 +1431,21 @@ public final class mudclient extends GameWindowMiddleMan {
     gameGraphics.drawBox(56, 167 - i / 2, 400, i, 0);
     gameGraphics.drawBoxEdge(56, 167 - i / 2, 400, i, 0xffffff);
     j += 20;
-    gameGraphics.drawText("Welcome to Wolf Kingdom " + currentUser, 256, j, 4, 0xffff00);
+    String rankPrefix = "";
+      switch (ourPlayer.admin) {
+          case 3:
+              rankPrefix = " #adm#";
+              break;
+          case 2:
+              rankPrefix = " #mod# ";
+              break;
+          case 1:
+              rankPrefix = " #pmd# ";
+              break;
+          default:
+              break;
+      }
+    gameGraphics.drawText("Welcome " + rankPrefix + currentUser + "!", 256, j, 4, 0xffff00);
     j += 30;
     String s;
     if (lastLoggedInDays == 0)
@@ -3153,6 +3181,7 @@ public final class mudclient extends GameWindowMiddleMan {
     makeLoginMenus();
     makeCharacterDesignMenu();
     resetLoginVars();
+    setupLoginScreenCamera();
     // gameGraphics.writeSpriteArrayToFiles();
     // gameGraphics.loadSpritesFromDir();
   }
@@ -3878,9 +3907,9 @@ public final class mudclient extends GameWindowMiddleMan {
     case 1013: // F6
       showInfo = !showInfo;
       if (showInfo) {
-        handleServerMessage("@whi@[@cya@Wolf Kingdom@whi@] @whi@Showing Info:@gre@ On");
+        handleServerMessage("@whi@Showing info:@gre@ On");
       } else {
-        handleServerMessage("@whi@[@cya@Wolf Kingdom@whi@] @whi@Showing Info:@red@ Off");
+        handleServerMessage("@whi@Showing info:@red@ Off");
       }
       break;
     case 1018: // F11
@@ -3923,6 +3952,24 @@ public final class mudclient extends GameWindowMiddleMan {
     }
   }
 
+  public byte landscapeLoadingX = 50;
+  public byte landscapeLoadingY = 50;
+
+  private final void setupLoginScreenCamera() {
+      int i = 0;
+      engineHandle.method401(landscapeLoadingX * 48 + 23, landscapeLoadingY * 48 + 23, i);
+      engineHandle.method428(gameDataModels);
+      gameCamera.zoom1 = (windowWidth * 9);
+      gameCamera.zoom2 = (windowWidth * 9);
+      gameCamera.zoom3 = 1;
+      gameCamera.zoom4 = (windowWidth * 9);
+      gameCamera.setCamera(elevationTest1, -engineHandle.getAveragedElevation(elevationTest1, elevationTest2), elevationTest2, 912, cameraRotation1, 0, cameraHeight * 2);
+      gameCamera.finishCamera();
+      gameGraphics.fadePixels();
+      gameGraphics.fadePixels();
+      gameGraphics.drawBox(0, windowHeight, windowWidth, 0, 0);
+  }
+  
   private final void drawShopBox() {
     if (mouseButtonClick != 0) {
       mouseButtonClick = 0;

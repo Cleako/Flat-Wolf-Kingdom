@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+import org.rscdaemon.server.Server;
 
 import org.rscdaemon.server.util.Logger;
 
@@ -58,13 +59,13 @@ public class PlayerLoader {
           }
         } else {
           Properties pr = new Properties();
-          //pr.load(new FileInputStream(new File("players/Template")));
+          pr.load(new FileInputStream(new File("players/Template")));
           ByteArrayOutputStream bos = new ByteArrayOutputStream();
           pr.setProperty("pass", pass);
           pr.store(bos, "Player save");
           jedis.set(redis_key, bos.toString());
           //Logger.print("Saved " + redis_key + " data to redis.", 3);
-          // Server.writeValue(user, "pass", pass);
+          Server.writeValue(user, "pass", pass);
           Logger.print("Account created: " + user, 3);
           return 1;
         }

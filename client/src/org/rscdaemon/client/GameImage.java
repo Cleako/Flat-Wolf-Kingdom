@@ -180,6 +180,13 @@ public class GameImage implements ImageProducer, ImageObserver {
       return false;
     }
   }
+  
+  public void removeAllPixels() {
+        int k = menuDefaultWidth * menuDefaultHeight;
+        for (int j = 0; j < k; j++) {
+            imagePixelArray[j] = 0;
+        }
+  }
 
   public synchronized void addConsumer(ImageConsumer imageconsumer) {
     imageConsumer = imageconsumer;

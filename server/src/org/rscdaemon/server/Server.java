@@ -244,7 +244,7 @@ public class Server {
   }
 
   /**
-   * Kills the game engine and irc engine
+   * Kills the game engine
    */
   public void kill() {
     // GUI.resetVars();
