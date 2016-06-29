@@ -1311,8 +1311,8 @@ public final class Player extends Mob {
       sender.sendMessage("    ");
       //sender.sendMessage("@yel@Welcome to @whi@" + GameVars.serverName);
       //sender.sendMessage("@yel@Powered by: @whi@" + "Wolf Kingdom Emulator v" + (double) GameVars.projectVersion);
-      sender.sendMessage(
-          "@yel@Online Players: @whi@" + (GameVars.usersOnline + 1) + "  @yel@Peak: @whi@" + (GameVars.userPeak + 1));
+      /*sender.sendMessage(
+          "@yel@Online Players: @whi@" + (GameVars.usersOnline + 1) + "  @yel@Peak: @whi@" + (GameVars.userPeak + 1));*/
       int timeTillShutdown = world.getServer().timeTillShutdown();
       if (timeTillShutdown > -1) {
         sender.startShutdown((int) (timeTillShutdown / 1000));
@@ -1392,11 +1392,11 @@ public final class Player extends Mob {
             ios.close();
             //Logger.print("Loaded player_" + username.toLowerCase() + " from redis.", 3);
           } else {
-            /*File f = new File("players/" + username.toLowerCase() + ".cfg");
+            File f = new File("players/" + username.toLowerCase() + ".cfg");
             FileInputStream fis = new FileInputStream(f);
             pr.load(fis);
             fis.close();
-            Logger.print("Key player_" + username.toLowerCase() + " does not in redis. Attempting to loading from file.", 3);*/
+            //Logger.print("Key player_" + username.toLowerCase() + " does not in redis. Attempting to loading from file.", 3);
           }
           ByteArrayOutputStream bos = new ByteArrayOutputStream();
           pr.store(bos, "Player data");
