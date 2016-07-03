@@ -105,9 +105,8 @@ public class GameImage implements ImageProducer, ImageObserver {
     catch (FileNotFoundException e) {
 
     }
-    catch (IOException ioe) {
-
-    }
+    //catch (IOException ioe) {
+    //}
 
     return jsonObject;
   }

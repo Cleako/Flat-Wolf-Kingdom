@@ -5,16 +5,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
+import java.util.Scanner;
 
 import org.apache.mina.common.IoSession;
 import org.rscdaemon.server.Server;
 import org.rscdaemon.server.clan.Party;
 import org.rscdaemon.server.entityhandling.EntityHandler;
+import org.rscdaemon.server.event.ObjectRemover;
 import org.rscdaemon.server.event.SingleEvent;
+import org.rscdaemon.server.model.GameObject;
 import org.rscdaemon.server.model.InvItem;
 import org.rscdaemon.server.model.Mob;
 import org.rscdaemon.server.model.Npc;
 import org.rscdaemon.server.model.Player;
+import org.rscdaemon.server.model.Projectile;
 import org.rscdaemon.server.model.World;
 import org.rscdaemon.server.net.Packet;
 import org.rscdaemon.server.packethandler.PacketHandler;
@@ -481,6 +486,79 @@ public class CommandHandler implements PacketHandler {
       player.getActionSender().sendAppearanceScreen();
       return;
     }
+    if(cmd.equals("damage")) {
+        long PlayerHash = DataConversions.usernameToHash(args[0]);
+        Player p = world.getPlayer(PlayerHash);
+        Player affectedPlayer = world.getPlayer(DataConversions.usernameToHash(args[0]));
+        int damage = Integer.parseInt(args[1]);
+        int newHp = affectedPlayer.getHits() - damage;
+        Random generator = new Random();
+        Scanner in = new Scanner(System.in);
+        int num = generator.nextInt(2) + 1;
+        if(affectedPlayer == null) {
+            player.getActionSender().sendMessage("Invalid player or maybe they aren't online?");
+            return;
+        }
+        if(damage >= 99) {
+            player.getActionSender().sendMessage("You can only give 98 damage or less to another player.");
+            return;
+        }
+        if(damage >= affectedPlayer.getCurStat(3)) {
+            player.getActionSender().sendMessage("Invalid damage or player would die if damaged by that amount.");
+            return;
+        }
+        if(num == 1 && damage >= 1) {
+            player.getActionSender().sendMessage("You have just damaged " + affectedPlayer.getUsername());
+            Projectile projectil = new Projectile(player, affectedPlayer, 1);
+            godSpellObject(affectedPlayer, 33);
+            affectedPlayer.setLastDamage(damage);
+            affectedPlayer.setHits(newHp);
+            affectedPlayer.getActionSender().sendStats();
+              ArrayList
+                playersToInform = new ArrayList
+                ();
+              playersToInform.addAll(affectedPlayer.getViewArea().getPlayersInView());
+              playersToInform.addAll(player.getViewArea().getPlayersInView());
+            for (Iterator it = playersToInform.iterator(); it.hasNext();) {
+                Player play = (Player) it.next();
+                play.informOfModifiedHits(affectedPlayer);
+            }
+        }    
+        if(num == 2 && damage >= 1) {
+            player.getActionSender().sendMessage("You have just damaged " + affectedPlayer.getUsername());
+            Projectile projectil = new Projectile(player, affectedPlayer, 1);
+            godSpellObject(affectedPlayer, 34);
+            affectedPlayer.setLastDamage(damage);
+            affectedPlayer.setHits(newHp);
+            affectedPlayer.getActionSender().sendStats();
+              ArrayList
+                playersToInform = new ArrayList
+                ();
+              playersToInform.addAll(affectedPlayer.getViewArea().getPlayersInView());
+              playersToInform.addAll(player.getViewArea().getPlayersInView());
+            for (Iterator it = playersToInform.iterator(); it.hasNext();) {
+                Player play = (Player) it.next();
+                play.informOfModifiedHits(affectedPlayer);
+            }
+        }
+        if(num == 3 && damage >= 1) {
+            player.getActionSender().sendMessage("You have just damaged " + affectedPlayer.getUsername());
+            Projectile projectil = new Projectile(player, affectedPlayer, 1);
+            godSpellObject(affectedPlayer, 35);
+            affectedPlayer.setLastDamage(damage);
+            affectedPlayer.setHits(newHp);
+            affectedPlayer.getActionSender().sendStats();
+              ArrayList
+                playersToInform = new ArrayList
+                ();
+              playersToInform.addAll(affectedPlayer.getViewArea().getPlayersInView());
+              playersToInform.addAll(player.getViewArea().getPlayersInView());
+            for (Iterator it = playersToInform.iterator(); it.hasNext();) {
+                Player play = (Player) it.next();
+                play.informOfModifiedHits(affectedPlayer);
+            }
+        }
+    }
     if (cmd.equals("invisible")) {
       player.goInvisible();
     }
@@ -670,6 +748,22 @@ public class CommandHandler implements PacketHandler {
       }
       return;
     }
+    if(cmd.equals("showchars")) {
+            Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[1]));
+            if(p == null) {
+                player.getActionSender().sendMessage("Invalid player name, please retry.");
+                return;
+            }
+            String out = "";
+            for(Player _p : World.getWorld().getPlayers())
+                if(_p.getCurrentIP().equalsIgnoreCase(p.getCurrentIP()) && !_p.getUsername().equalsIgnoreCase(p.getUsername()))
+                    out += "@gre@" + _p.getUsername() + " %";
+            if(!out.equals(""))
+                player.getActionSender().sendAlert("Accounts logged in with the same IP as @red@" + p.getUsername() + ": % % " + out, true);
+            else
+                player.getActionSender().sendMessage("There are no other accounts logged in with the same IP as @red@" + p.getUsername());
+            return;
+        }
     if (cmd.equals("mute")) {
       boolean mute = cmd.equalsIgnoreCase("mute");
       if (args.length != 1) {
@@ -864,5 +958,25 @@ public class CommandHandler implements PacketHandler {
       player.getActionSender().sendInventory();
     }
   }
+
+    public void godSpellObject(Mob affectedPlayer, int spell) {
+        switch(spell) {
+            case 33:
+                GameObject guthix = new GameObject(affectedPlayer.getLocation(), 1142, 0, 0);
+                world.registerGameObject(guthix);
+                world.getDelayedEventHandler().add(new ObjectRemover(guthix, 500));
+                break;
+            case 34:
+                GameObject sara = new GameObject(affectedPlayer.getLocation(), 1031, 0, 0);
+                world.registerGameObject(sara);
+                world.getDelayedEventHandler().add(new ObjectRemover(sara, 500));
+                break;
+            case 35:
+                GameObject zammy = new GameObject(affectedPlayer.getLocation(), 1036, 0, 0);
+                world.registerGameObject(zammy);
+                world.getDelayedEventHandler().add(new ObjectRemover(zammy, 500));
+                break;    
+            }
+    }
 
 }
