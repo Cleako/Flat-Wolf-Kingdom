@@ -1122,8 +1122,8 @@ public final class mudclient extends GameWindowMiddleMan {
           gameGraphics.spriteClip4(l8, i9, 48, 32,
               SPRITE_ITEM_START + EntityHandler.getItemDef(bankItems[k7]).getSprite(),
               EntityHandler.getItemDef(bankItems[k7]).getPictureMask(), 0, 0, false);
-          gameGraphics.drawString(String.valueOf(bankItemsCount[k7]), l8 + 1, i9 + 10, 1, 65280);
-          gameGraphics.drawBoxTextRight(String.valueOf(inventoryCount(bankItems[k7])), l8 + 47, i9 + 29, 1, 65535);
+          gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(bankItemsCount[k7])), l8 + 1, i9 + 10, 1, 65280);
+          gameGraphics.drawBoxTextRight(DisplayHandler.insertCommas(String.valueOf(inventoryCount(bankItems[k7]))), l8 + 47, i9 + 29, 1, 65535);
         }
         k7++;
       }
@@ -1238,7 +1238,7 @@ public final class mudclient extends GameWindowMiddleMan {
             SPRITE_ITEM_START + EntityHandler.getItemDef(inventoryItems[j]).getSprite(),
             EntityHandler.getItemDef(inventoryItems[j]).getPictureMask(), 0, 0, false);
         if (EntityHandler.getItemDef(inventoryItems[j]).isStackable())
-          gameGraphics.drawString(String.valueOf(inventoryItemsCount[j]), k + 1, i1 + 10, 1, 0xffff00);
+          gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(inventoryItemsCount[j])), k + 1, i1 + 10, 1, 0xffff00);
       }
     }
 
@@ -4031,7 +4031,7 @@ public final class mudclient extends GameWindowMiddleMan {
     gameGraphics.drawBoxTextRight("Close window", byte0 + 406, byte1 + 10, 1, j1);
     gameGraphics.drawString("Shops stock in green", byte0 + 2, byte1 + 24, 1, 65280);
     gameGraphics.drawString("Number you own in blue", byte0 + 135, byte1 + 24, 1, 65535);
-    gameGraphics.drawString("Your money: " + inventoryCount(10) + "gp", byte0 + 280, byte1 + 24, 1, 0xffff00);
+    gameGraphics.drawString("Your money: " + DisplayHandler.insertCommas( "" + inventoryCount(10)) + "gp", byte0 + 280, byte1 + 24, 1, 0xffff00);
     int k2 = 0xd0d0d0;
     int k3 = 0;
     for (int k4 = 0; k4 < 5; k4++) {
@@ -4064,8 +4064,7 @@ public final class mudclient extends GameWindowMiddleMan {
     if (i5 != -1) {
       if (shopItemCount[selectedShopItemIndex] > 0) {
         int j6 = (shopItemBuyPriceModifier * EntityHandler.getItemDef(i5).getBasePrice()) / 100;
-        gameGraphics.drawString("Buy a new " + EntityHandler.getItemDef(i5).getName() + " for " + j6 + "gp", byte0 + 2,
-            byte1 + 214, 1, 0xffff00);
+        gameGraphics.drawString("Buy a new " + EntityHandler.getItemDef(i5).getName() + " for " + DisplayHandler.insertCommas( "" + j6) + "gp", byte0 + 2, byte1 + 214, 1, 0xffff00);
         int k1 = 0xffffff;
         if (super.mouseX > byte0 + 298 && super.mouseY >= byte1 + 204 && super.mouseX < byte0 + 408
             && super.mouseY <= byte1 + 215)
@@ -4076,8 +4075,7 @@ public final class mudclient extends GameWindowMiddleMan {
       }
       if (inventoryCount(i5) > 0) {
         int k6 = (shopItemSellPriceModifier * EntityHandler.getItemDef(i5).getBasePrice()) / 100;
-        gameGraphics.drawBoxTextRight("Sell your " + EntityHandler.getItemDef(i5).getName() + " for " + k6 + "gp",
-            byte0 + 405, byte1 + 239, 1, 0xffff00);
+        gameGraphics.drawBoxTextRight("Sell your " + EntityHandler.getItemDef(i5).getName() + " for " + DisplayHandler.insertCommas( "" + k6) + "gp", byte0 + 405, byte1 + 239, 1, 0xffff00);
         int l1 = 0xffffff;
         if (super.mouseX > byte0 + 2 && super.mouseY >= byte1 + 229 && super.mouseX < byte0 + 112
             && super.mouseY <= byte1 + 240)
@@ -5178,7 +5176,7 @@ public final class mudclient extends GameWindowMiddleMan {
           SPRITE_ITEM_START + EntityHandler.getItemDef(inventoryItems[l4]).getSprite(),
           EntityHandler.getItemDef(inventoryItems[l4]).getPictureMask(), 0, 0, false);
       if (EntityHandler.getItemDef(inventoryItems[l4]).isStackable())
-        gameGraphics.drawString(String.valueOf(inventoryItemsCount[l4]), i5 + 1, k5 + 10, 1, 0xffff00);
+        gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(inventoryItemsCount[l4])), i5 + 1, k5 + 10, 1, 0xffff00);
     }
 
     for (int j5 = 0; j5 < tradeMyItemCount; j5++) {
@@ -5188,7 +5186,7 @@ public final class mudclient extends GameWindowMiddleMan {
           SPRITE_ITEM_START + EntityHandler.getItemDef(tradeMyItems[j5]).getSprite(),
           EntityHandler.getItemDef(tradeMyItems[j5]).getPictureMask(), 0, 0, false);
       if (EntityHandler.getItemDef(tradeMyItems[j5]).isStackable())
-        gameGraphics.drawString(String.valueOf(tradeMyItemsCount[j5]), l5 + 1, j6 + 10, 1, 0xffff00);
+        gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(tradeMyItemsCount[j5])), l5 + 1, j6 + 10, 1, 0xffff00);
       if (super.mouseX > l5 && super.mouseX < l5 + 48 && super.mouseY > j6 && super.mouseY < j6 + 32)
         gameGraphics.drawString(EntityHandler.getItemDef(tradeMyItems[j5]).getName() + ": @whi@"
             + EntityHandler.getItemDef(tradeMyItems[j5]).getDescription(), byte0 + 8, byte1 + 273, 1, 0xffff00);
@@ -5201,7 +5199,7 @@ public final class mudclient extends GameWindowMiddleMan {
           SPRITE_ITEM_START + EntityHandler.getItemDef(tradeOtherItems[i6]).getSprite(),
           EntityHandler.getItemDef(tradeOtherItems[i6]).getPictureMask(), 0, 0, false);
       if (EntityHandler.getItemDef(tradeOtherItems[i6]).isStackable())
-        gameGraphics.drawString(String.valueOf(tradeOtherItemsCount[i6]), k6 + 1, l6 + 10, 1, 0xffff00);
+        gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(tradeOtherItemsCount[i6])), k6 + 1, l6 + 10, 1, 0xffff00);
       if (super.mouseX > k6 && super.mouseX < k6 + 48 && super.mouseY > l6 && super.mouseY < l6 + 32)
         gameGraphics.drawString(EntityHandler.getItemDef(tradeOtherItems[i6]).getName() + ": @whi@"
             + EntityHandler.getItemDef(tradeOtherItems[i6]).getDescription(), byte0 + 8, byte1 + 273, 1, 0xffff00);
@@ -6812,7 +6810,7 @@ public final class mudclient extends GameWindowMiddleMan {
           SPRITE_ITEM_START + EntityHandler.getItemDef(inventoryItems[l4]).getSprite(),
           EntityHandler.getItemDef(inventoryItems[l4]).getPictureMask(), 0, 0, false);
       if (EntityHandler.getItemDef(inventoryItems[l4]).isStackable())
-        gameGraphics.drawString(String.valueOf(inventoryItemsCount[l4]), i5 + 1, k5 + 10, 1, 0xffff00);
+        gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(inventoryItemsCount[l4])), i5 + 1, k5 + 10, 1, 0xffff00);
     }
 
     for (int j5 = 0; j5 < duelMyItemCount; j5++) {
@@ -6822,7 +6820,7 @@ public final class mudclient extends GameWindowMiddleMan {
           SPRITE_ITEM_START + EntityHandler.getItemDef(duelMyItems[j5]).getSprite(),
           EntityHandler.getItemDef(duelMyItems[j5]).getPictureMask(), 0, 0, false);
       if (EntityHandler.getItemDef(duelMyItems[j5]).isStackable())
-        gameGraphics.drawString(String.valueOf(duelMyItemsCount[j5]), l5 + 1, j6 + 10, 1, 0xffff00);
+        gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(duelMyItemsCount[j5])), l5 + 1, j6 + 10, 1, 0xffff00);
       if (super.mouseX > l5 && super.mouseX < l5 + 48 && super.mouseY > j6 && super.mouseY < j6 + 32)
         gameGraphics.drawString(EntityHandler.getItemDef(duelMyItems[j5]).getName() + ": @whi@"
             + EntityHandler.getItemDef(duelMyItems[j5]).getDescription(), byte0 + 8, byte1 + 273, 1, 0xffff00);
@@ -6835,7 +6833,7 @@ public final class mudclient extends GameWindowMiddleMan {
           SPRITE_ITEM_START + EntityHandler.getItemDef(duelOpponentItems[i6]).getSprite(),
           EntityHandler.getItemDef(duelOpponentItems[i6]).getPictureMask(), 0, 0, false);
       if (EntityHandler.getItemDef(duelOpponentItems[i6]).isStackable())
-        gameGraphics.drawString(String.valueOf(duelOpponentItemsCount[i6]), k6 + 1, l6 + 10, 1, 0xffff00);
+        gameGraphics.drawString(DisplayHandler.insertCommas(String.valueOf(duelOpponentItemsCount[i6])), k6 + 1, l6 + 10, 1, 0xffff00);
       if (super.mouseX > k6 && super.mouseX < k6 + 48 && super.mouseY > l6 && super.mouseY < l6 + 32)
         gameGraphics.drawString(
             EntityHandler.getItemDef(duelOpponentItems[i6]).getName() + ": @whi@"

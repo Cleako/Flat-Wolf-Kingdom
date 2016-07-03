@@ -184,7 +184,8 @@ public class GameWindow extends Applet implements Runnable {
   }
 
   public final void destroy() {
-    exitTimeout = -1;
+    close();
+      /*exitTimeout = -1;
     try {
       Thread.sleep(2000L);
     }
@@ -197,11 +198,11 @@ public class GameWindow extends Applet implements Runnable {
         gameWindowThread.stop();
         gameWindowThread = null;
       }
-    }
+    }*/
   }
 
   private final void close() {
-    exitTimeout = -2;
+    /*exitTimeout = -2;
     System.out.println("Closing program");
     logoutAndStop();
     try {
@@ -211,7 +212,7 @@ public class GameWindow extends Applet implements Runnable {
     }
     if (gameFrame != null) {
       gameFrame.dispose();
-    }
+    }*/
     System.exit(0);
   }
 
