@@ -16,7 +16,7 @@
  3. `ant runserver` to run
  
 # Contributing
-Contact Marwolf
+Contact Cleako / Marwolf
 
 # TODO:
 
