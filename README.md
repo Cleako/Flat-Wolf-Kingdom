@@ -4,6 +4,7 @@
 # Building
  1. Download NetBeans IDE
  2. Clone the project in git
+ 3. Have Redis installed and running localhost for player saves.
  
 ## Client
  1. `ant compile` from the base directory will build the client
