@@ -105,7 +105,7 @@ public class WieldHandler implements PacketHandler {
     player.updateWornItems(item.getWieldableDef().getWieldPos(), item.getWieldableDef().getSprite());
   }
 
-  private void unWieldItem(Player player, InvItem item, boolean sound) {
+  public static void unWieldItem(Player player, InvItem item, boolean sound) {
     item.setWield(false);
     if (sound) {
       player.getActionSender().sendSound("click");

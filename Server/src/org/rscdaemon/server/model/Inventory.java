@@ -181,4 +181,8 @@ public class Inventory {
     return (MAX_SIZE - list.size()) >= getRequiredSlots(item);
   }
 
+    boolean hasItemId(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

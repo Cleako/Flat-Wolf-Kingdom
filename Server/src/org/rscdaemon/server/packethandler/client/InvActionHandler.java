@@ -101,30 +101,30 @@ public class InvActionHandler implements PacketHandler {
         }
       });
     } else if (item.getDef().getCommand().equalsIgnoreCase("bury")) {
-      player.setBusy(true);
-      player.getActionSender().sendMessage("You dig a hole in the ground.");
-      world.getDelayedEventHandler().add(new MiniEvent(player) {
-        public void action() {
-          owner.getActionSender().sendMessage("You bury the " + item.getDef().getName() + ".");
-          owner.getInventory().remove(item);
-          switch (item.getID()) {
-          case 20: // Bones
-          case 604: // Bat bones
-            owner.incExp(5, 150, true, true);
-            break;
-          case 413: // Big bones
-            owner.incExp(5, 300, true, true);
-            break;
-          case 814: // Dragon bones
-            owner.incExp(5, 600, true, true);
-            break;
-          }
-          owner.getActionSender().sendStat(5);
-          owner.getActionSender().sendInventory();
-          owner.setBusy(false);
-        }
-      });
-    } else if (item.getDef().getCommand().equalsIgnoreCase("clean")) {
+		    player.setBusy(true);
+		    player.getActionSender().sendMessage("You dig a hole in the ground.");
+		    World.getWorld().getDelayedEventHandler().add(new MiniEvent(player) {
+				public void action() {
+				    owner.getActionSender().sendMessage("You bury the " + item.getDef().getName() + ".");
+				    owner.getInventory().remove(item);
+				    switch (item.getID()) {
+					    case 20: // Bones
+					    case 604: // Bat bones
+							owner.incExp(5, 150, true, true);
+							break;
+					    case 413: // Big bones
+							owner.incExp(5, 300, true, true);
+							break;
+					    case 814: // Dragon bones
+							owner.incExp(5, 600, true, true);
+							break;
+				    }
+				    owner.getActionSender().sendStat(5);
+				    owner.getActionSender().sendInventory();
+				    owner.setBusy(false);
+				}
+		    });
+		} else if (item.getDef().getCommand().equalsIgnoreCase("clean")) {
       ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
       if (herb == null) {
         return;
@@ -735,7 +735,7 @@ public class InvActionHandler implements PacketHandler {
     return low + (int) (Math.random() * (high - low + 1));
   }
 
-  private void showBubble(Player player, InvItem item) {
+  public static void showBubble(Player player, InvItem item) {
     Bubble bubble = new Bubble(player, item.getID());
     for (Player p1 : player.getViewArea().getPlayersInView()) {
       p1.informOfBubble(bubble);

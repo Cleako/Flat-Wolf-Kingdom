@@ -69,4 +69,18 @@ public class NPCLoc implements Serializable {
   public int maxY() {
     return maxY;
   }
+  /**
+    * Npc Owner
+    * @author NotPro
+    */
+  public String owner = null;
+  public NPCLoc(int id, int startX, int startY, String owner) {
+		this.id = id;
+		this.startX = startX;
+		this.startY = startY;
+		this.owner = owner;
+  }
+  public String getOwner() {
+      return owner;
+  }
 }

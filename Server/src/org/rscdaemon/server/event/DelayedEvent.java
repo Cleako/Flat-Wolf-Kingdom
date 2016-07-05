@@ -11,6 +11,7 @@ public abstract class DelayedEvent {
   protected Player owner;
   private long lastRun = System.currentTimeMillis();
   protected final DelayedEventHandler handler = World.getWorld().getDelayedEventHandler();
+  protected boolean matchRunning = true;
 
   public DelayedEvent(Player owner, int delay) {
     this.owner = owner;
@@ -63,5 +64,9 @@ public abstract class DelayedEvent {
   public Player getOwner() {
     return owner;
   }
+
+    public boolean is(DelayedEvent timeout) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

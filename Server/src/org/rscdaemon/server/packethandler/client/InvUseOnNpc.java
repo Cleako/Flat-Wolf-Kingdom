@@ -195,7 +195,7 @@ public class InvUseOnNpc implements PacketHandler {
         return DataConversions.inArray(ids, item.getID());
       }
 
-      private void showBubble() {
+      public void showBubble() {
         Bubble bubble = new Bubble(owner, item.getID());
         for (Player p : owner.getViewArea().getPlayersInView()) {
           p.informOfBubble(bubble);

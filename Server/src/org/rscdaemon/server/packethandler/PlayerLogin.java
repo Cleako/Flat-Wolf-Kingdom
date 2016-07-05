@@ -165,6 +165,10 @@ public class PlayerLogin implements PacketHandler {
       sender.sendLoginBox();
 
       player.setLoggedIn(true);
+      if (player.isAdmin() || player.isPMod()) {
+				player.setnopk(true);
+				player.setnonaggro(true);
+      }
       player.setBusy(false);
     } else {
       player.destroy(true);

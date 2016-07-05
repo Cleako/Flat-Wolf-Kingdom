@@ -20,7 +20,9 @@ import java.util.Properties;
 
 import org.apache.mina.common.IoSession;
 import org.rscdaemon.server.GameVars;
+import org.rscdaemon.server.packethandler.client.WieldHandler;
 import org.rscdaemon.server.Server;
+import org.rscdaemon.server.util.Constants;
 import org.rscdaemon.server.entityhandling.EntityHandler;
 import org.rscdaemon.server.entityhandling.defs.PrayerDef;
 import org.rscdaemon.server.event.DelayedEvent;
@@ -39,6 +41,7 @@ import org.rscdaemon.server.util.Logger;
 import org.rscdaemon.server.util.StatefulEntityCollection;
 
 import com.google.gson.Gson;
+import java.util.Map;
 
 import redis.clients.jedis.Jedis;
 
@@ -2529,6 +2532,10 @@ public final class Player extends Mob {
       maxStat[i] = 0;
     }
   }
+  
+  public void incExp(int i, int amount, boolean useFatigue, boolean multiplied) {
+		incExp(i, amount, useFatigue, false, true);
+	}
 
   public void setFatigue(int fatigue) {
     this.fatigue = fatigue;
@@ -2537,48 +2544,127 @@ public final class Player extends Mob {
   public int getFatigue() {
     return fatigue;
   }
-
-  public void incExp(int i, int amount, boolean useFatigue, boolean multiplied) {
-    if (GameVars.useFatigue) {
-      if (useFatigue) {
-        if (fatigue >= 100) {
-          actionSender.sendMessage("@gre@You are too tired to gain experience, get some rest!");
-          return;
-        }
-        if (fatigue >= 96) {
-          actionSender.sendMessage("@gre@You start to feel tired, maybe you should rest soon.");
-        }
-        fatigue++;
-        actionSender.sendFatigue();
-      }
-    }
-    if (multiplied)
-      amount *= GameVars.expMultiplier;
-    exp[i] += amount;
-    if (exp[i] < 0) {
-      exp[i] = 0;
-    }
-    int level = Formulae.experienceToLevel(exp[i]);
-    if (level != maxStat[i]) {
-      int advanced = level - maxStat[i];
-      incCurStat(i, advanced);
-      incMaxStat(i, advanced);
-      actionSender.sendStat(i);
-      actionSender.sendMessage("@gre@You just advanced " + advanced + " " + Formulae.statArray[i] + " level!");
-      actionSender.sendSound("advance");
-      world.getDelayedEventHandler().add(new MiniEvent(this) {
-        public void action() {
-          owner.getActionSender().sendScreenshot();
-        }
-      });
-      int comb = Formulae.getCombatlevel(maxStat);
-      if (comb != getCombatLevel()) {
-        actionSender.sendMessage("@gre@Your combat level is now:@whi@ " + comb + "!");
-        actionSender.sendSound("advance");
-        setCombatLevel(comb);
-      }
-    }
+  
+  public int combatStyleToIndex() {
+		if (getCombatStyle() == 1) {
+			return 2;
+		}
+		if (getCombatStyle() == 2) {
+			return 0;
+		}
+		if (getCombatStyle() == 3) {
+			return 1;
+		}
+		return -1;
   }
+
+  public void incExp(int i, int amount, boolean useFatigue, boolean combat, boolean useMultiplier) {
+		if(this.isPMod() && !this.isAdmin()) {
+			return;
+		}
+		/*if (useFatigue) {
+			if (fatigue <= 0) {
+				actionSender.sendMessage("@red@Warning: Your energy reserve has been depleted and no experience can be gained.");
+				return;
+			}
+			if (fatigue <= 4) {
+				actionSender.sendMessage("@red@Warning: Your energy reserve is low, recharge soon.");
+			}
+			if (i >= 3 && useFatigue) {
+				fatigue--;
+				actionSender.sendFatigue();
+			}
+		}*/
+		if (combat && i < 3	&& (combatStyleToIndex() != i && getCombatStyle() != 0)) {
+			return;
+		}
+		double exprate = Constants.GameServer.EXP_RATE;
+		
+		if(useMultiplier) {
+			if (isSubscriber()) {
+				exprate = Constants.GameServer.SUB_EXP_RATE;
+			}
+			if(i < 7) {
+				exprate *= 5;
+			}
+			else {
+				/*if(World.getWorld().isDoubleXpWeekend()) {
+						exprate *= 2;
+				}*/
+			}
+		}
+		
+		
+		exp[i] += amount * exprate;
+		if (exp[i] < 0) {
+			exp[i] = 0;
+		}
+
+		int level = Formulae.experienceToLevel(exp[i]);
+		if (level != maxStat[i]) {
+				for (InvItem item : this.getInventory().getItems()) {
+					if(!item.isWielded()) {
+						continue;
+					}
+					String youNeed = "";
+					for (Map.Entry<Integer, Integer> e : item.getWieldableDef().getStatsRequired()) {
+						  if (this.getMaxStat(e.getKey()) < e.getValue()) {
+							youNeed += ((Integer) e.getValue()).intValue() + " " + Formulae.statArray[((Integer) e.getKey()).intValue()] + ", ";
+						}
+					}
+					if (!youNeed.equals("")) {
+						this.getActionSender().sendMessage("You must have at least " + youNeed.substring(0, youNeed.length() - 2) + " to use this item.");
+							WieldHandler.unWieldItem(this, item, true);
+					}
+					if (EntityHandler.getItemWieldableDef(item.getID()).femaleOnly() && this.isMale()) {
+						 this.getActionSender().sendMessage("This piece of armor is for a female only.");
+							WieldHandler.unWieldItem(this, item, true);
+					}
+					if (item.getID() == 407 || item.getID() == 401) {
+						 if (this.getCurStat(6) < 31) {
+							this.getActionSender().sendMessage("You must have at least 31 magic");
+								WieldHandler.unWieldItem(this, item, true);
+							}
+					}
+					if(item.getID() == 1288 && item.isWielded()) {
+						boolean found = false;
+						for(int it=0; it < 18; it++) {
+							if(this.getMaxStat(it) == 99) {
+								found = true; 
+								break;
+							}
+					}
+					if(!found) {
+						this.getActionSender().sendMessage("Sorry, you need any skill of level 99 to wield this cape of legends");
+						WieldHandler.unWieldItem(this, item, true);
+					}
+					}
+				}
+				
+			this.getActionSender().sendInventory();
+			
+			int advanced = level - maxStat[i];
+			incCurStat(i, advanced);
+			incMaxStat(i, advanced);
+			actionSender.sendStat(i);
+			actionSender.sendMessage("@gre@You just advanced " + advanced + " " + Formulae.statArray[i] + " level" + (advanced > 1 ? "s" : "") + "!");
+			actionSender.sendSound("advance");
+			World.getWorld().getDelayedEventHandler().add(new MiniEvent(this) {
+				public void action() {
+					owner.getActionSender().sendScreenshot();
+				}
+			});
+			int comb = Formulae.getCombatlevel(maxStat);
+			if (comb != getCombatLevel()) {
+				setCombatLevel(comb);
+				/* (inParty() && getParty() != null) {
+					for (Player p : getParty().members) {
+						p.getActionSender().sendParty();
+					}
+				}*/
+			}
+		}
+	}
 
   // destroy
   public int[] getExps() {
@@ -2608,4 +2694,19 @@ public final class Player extends Mob {
     return false;
   }
 
+  public void setnonaggro(boolean arg) {
+		nonaggro = arg;
+	}
+  public void setnopk(boolean arg) {
+		nopk = arg;
+	}
+  
+  public boolean isNonaggro() {
+		return nonaggro;
+	}
+
+  private boolean nonaggro = false;
+
+  private boolean nopk = false;
+  
 }
