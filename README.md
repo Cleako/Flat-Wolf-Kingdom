@@ -1,5 +1,5 @@
 # Wolf Kingdom
-(Previously known as DARScape Classic)
+This project has been discontinued.
 
 # Building
  1. Download NetBeans IDE
