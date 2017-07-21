@@ -20,3 +20,10 @@ firescape-server/players/*.cfg
 /Tools/Sprite Editor/dist/
 /Tools/Sprite Editor/nbproject/private/
 /Map Generator/nbproject/private/
+/Client/nbproject/private/
+/Server/nbproject/private/
+/Tools/Launcher/nbproject/private/
+/Server/dist/
+/Server/build/
+/Client/dist/
+/Client/build/
